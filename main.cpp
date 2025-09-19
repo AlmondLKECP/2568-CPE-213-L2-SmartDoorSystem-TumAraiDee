@@ -4,6 +4,9 @@
 #include <Adafruit_SSD1306.h>
 #include <ESP32Servo.h>
 
+HardwareSerial mySerial(2);
+
+
 // ==== CONFIG ==== 
 #define SERVO_PIN 14
 #define TRIG_PIN1 32
@@ -79,10 +82,10 @@ void showPasswordScreen() {
   display.println(inputPassword);
   display.display();
 }
-
 void setup() {
+  mySerial.begin(115200, SERIAL_8N1, 16, 17);
   Serial.begin(115200);
-  Serial.println("Ready to type...");
+  mySerial.println("Ready to type...");
   pinMode(TRIG_PIN1, OUTPUT);
   pinMode(ECHO_PIN1, INPUT);
   pinMode(TRIG_PIN2, OUTPUT);
@@ -90,12 +93,11 @@ void setup() {
   pinMode(BUTTON_PIN, INPUT_PULLUP);
   pinMode(LED1, OUTPUT);
   pinMode(LED2, OUTPUT);
-
   doorServo.attach(SERVO_PIN);
   doorServo.write(0); // ปิดเริ่มต้น
 
   if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-    Serial.println(F("SSD1306 allocation failed"));
+    mySerial.println(F("SSD1306 allocation failed"));
     for(;;);
   }
   display.clearDisplay();
@@ -124,10 +126,10 @@ void loop() {
 
     // ==== อ่านรหัสผ่านจาก Serial Monitor ====
     while (inputPassword != correctPassword && attempts < 3) {
-      if (Serial.available()) {
-        char c = Serial.read();
-        Serial.print("You typed : ");
-        Serial.println(c);
+      if (mySerial.available()) {
+        char c = mySerial.read();
+        mySerial.print("You typed : ");
+        mySerial.println(c);
         if (isdigit(c)) {                 // รับเฉพาะตัวเลข 0-9
           inputPassword += c;
           showPasswordScreen();
