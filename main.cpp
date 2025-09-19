@@ -4,13 +4,15 @@
 #include <Adafruit_SSD1306.h>
 #include <ESP32Servo.h>
 
-// ==== CONFIG ====
+// ==== CONFIG ==== 
 #define SERVO_PIN 14
 #define TRIG_PIN1 32
 #define ECHO_PIN1 33
 #define TRIG_PIN2 25
 #define ECHO_PIN2 26
 #define BUTTON_PIN 27   // ปุ่มออก
+#define LED1 18
+#define LED2 19
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
@@ -18,15 +20,16 @@
 Servo doorServo;
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
-// ==== PASSWORD ====
-String correctPassword = "256574";
-String inputPassword = "";
-int attempts = 0;
+// ==== PASSWORD ==== 
+String correctPassword = "256574"; // รหัสผ่านที่ถูกต้อง
+String inputPassword = ""; // เก็บรหัสผ่านที่ป้อน
+int attempts = 0; // จำนวนความพยายาม
 
-// ==== STATE ====
+// ==== STATE ==== 
 bool doorOpen = false;
+bool readyToExit = false;
 
-// =======================
+// ======================= 
 long readUltrasonic(int trigPin, int echoPin) {
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -37,6 +40,16 @@ long readUltrasonic(int trigPin, int echoPin) {
   return duration * 0.034 / 2; // cm
 }
 
+void idleStatus(){
+  doorOpen = false;
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.println("Smart Door Ready");
+  digitalWrite(LED1, LOW);
+  digitalWrite(LED2, HIGH);
+  display.display();
+}
+
 void openDoor() {
   doorServo.write(90);   // เปิด 90 องศา
   doorOpen = true;
@@ -44,11 +57,13 @@ void openDoor() {
   display.setCursor(0, 0);
   display.println("Door Opened (90)");
   display.display();
-  delay(2000); // เวลาผ่านประตู
+  digitalWrite(LED1, HIGH);
+  digitalWrite(LED2, HIGH);
+  delay(3000); // เวลาผ่านประตู
 }
 
 void closeDoor() {
-  doorServo.write(0);   // ปิดกลับ
+  doorServo.write(0);   // ปิดประตู
   doorOpen = false;
   display.clearDisplay();
   display.setCursor(0, 0);
@@ -67,12 +82,14 @@ void showPasswordScreen() {
 
 void setup() {
   Serial.begin(115200);
-
+  Serial.println("Ready to type...");
   pinMode(TRIG_PIN1, OUTPUT);
   pinMode(ECHO_PIN1, INPUT);
   pinMode(TRIG_PIN2, OUTPUT);
   pinMode(ECHO_PIN2, INPUT);
   pinMode(BUTTON_PIN, INPUT_PULLUP);
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
 
   doorServo.attach(SERVO_PIN);
   doorServo.write(0); // ปิดเริ่มต้น
@@ -87,6 +104,8 @@ void setup() {
   display.setCursor(0, 0);
   display.println("Smart Door Ready");
   display.display();
+  digitalWrite(LED1, LOW);
+  digitalWrite(LED2, HIGH);
 }
 
 void loop() {
@@ -103,21 +122,25 @@ void loop() {
     inputPassword = "";
     attempts = 0;
 
-    // ==== อ่านรหัสผ่านจาก Serial (PC keyboard) ====
+    // ==== อ่านรหัสผ่านจาก Serial Monitor ====
     while (inputPassword != correctPassword && attempts < 3) {
       if (Serial.available()) {
         char c = Serial.read();
-        if (isdigit(c)) {
+        Serial.print("You typed : ");
+        Serial.println(c);
+        if (isdigit(c)) {                 // รับเฉพาะตัวเลข 0-9
           inputPassword += c;
           showPasswordScreen();
+
           if (inputPassword.length() == 6) {
             if (inputPassword == correctPassword) {
               openDoor();
               closeDoor();
+              idleStatus();
               break;
             } else {
               attempts++;
-              inputPassword = "";
+              inputPassword = "";          // เคลียร์ให้ใส่ใหม่
               display.clearDisplay();
               display.setCursor(0, 0);
               display.println("Wrong! Attempts: " + String(attempts));
@@ -134,14 +157,22 @@ void loop() {
       display.setCursor(0, 0);
       display.println("Timeout!!");
       display.display();
+      digitalWrite(LED1, HIGH);
+      digitalWrite(LED2, LOW);
       delay(5000);
+      idleStatus();
     }
   }
 
   // ==== ตรวจจับการออก ====
-  if ((digitalRead(BUTTON_PIN) == LOW || (dist2 > 0 && dist2 < 30)) && !doorOpen) {
+  if(dist2 > 0 && dist2 < 30 && !doorOpen){
+    readyToExit = true;
+  }
+  if(readyToExit && digitalRead(BUTTON_PIN)==LOW && !doorOpen){
     openDoor();
     closeDoor();
+    idleStatus();
+    readyToExit = false;
   }
 
   delay(100);
