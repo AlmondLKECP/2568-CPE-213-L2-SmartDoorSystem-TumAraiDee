@@ -1,5 +1,14 @@
-# CPE-213 Project
-
+# Smart Door System
+โปรเจคระบบควบคุมประตูอัฉริยะ
+Requirement
+*  x1 ESP32 + Shield
+*  x2 Ultrasonic HC-SR04          
+*  x1 Micro Servo Motor (SG90)
+*  x1 OLED SSD1306
+*  x2 LED (2 colors)
+*  x2 Resistor 1k Ohm
+*  x4 Resistor 330 Ohm
+  
 ## Team Members
 | Name       |      Student ID   |     GitHub ID     |
 |------------|------------------|:-----------------:|
