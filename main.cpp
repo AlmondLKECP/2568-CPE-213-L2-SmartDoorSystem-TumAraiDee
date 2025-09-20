@@ -110,59 +110,58 @@ void setup() {
   digitalWrite(LED2, HIGH);
 }
 
+bool waitingForPassword = false;
+
 void loop() {
   long dist1 = readUltrasonic(TRIG_PIN1, ECHO_PIN1);
   long dist2 = readUltrasonic(TRIG_PIN2, ECHO_PIN2);
 
-  // ==== ตรวจจับเข้าด้านหน้า (ต้องใส่รหัส) ====
-  if (dist1 > 0 && dist1 < 30 && !doorOpen) {
-    display.clearDisplay();
-    display.setCursor(0, 0);
-    display.println("Enter Password:");
-    display.display();
-
+  // ==== ตรวจจับเข้าด้านหน้า (เริ่มให้ใส่รหัส) ====
+  if (dist1 > 0 && dist1 < 30 && !doorOpen && !waitingForPassword) {
     inputPassword = "";
     attempts = 0;
+    waitingForPassword = true;
+    showPasswordScreen();
+  }
 
-    // ==== อ่านรหัสผ่านจาก Serial Monitor ====
-    while (inputPassword != correctPassword && attempts < 3) {
-      if (mySerial.available()) {
-        char c = mySerial.read();
-        mySerial.print("You typed : ");
-        mySerial.println(c);
-        if (isdigit(c)) {                 // รับเฉพาะตัวเลข 0-9
-          inputPassword += c;
-          showPasswordScreen();
+  // ==== อ่านรหัสผ่านจาก Serial แบบ non-blocking ====
+  if (waitingForPassword) {
+    if (mySerial.available()) {
+      char c = mySerial.read();
+      if (isdigit(c)) {
+        inputPassword += c;
+        showPasswordScreen();
 
-          if (inputPassword.length() == 6) {
-            if (inputPassword == correctPassword) {
-              openDoor();
-              closeDoor();
-              idleStatus();
-              break;
-            } else {
-              attempts++;
-              inputPassword = "";          // เคลียร์ให้ใส่ใหม่
+        if (inputPassword.length() == 6) {
+          if (inputPassword == correctPassword) {
+            openDoor();
+            closeDoor();
+            idleStatus();
+            waitingForPassword = false;
+          } else {
+            attempts++;
+            inputPassword = "";
+            display.clearDisplay();
+            display.setCursor(0, 0);
+            display.println("Wrong! Attempts: " + String(attempts));
+            display.display();
+            delay(1000);
+            if (attempts >= 3) {
               display.clearDisplay();
               display.setCursor(0, 0);
-              display.println("Wrong! Attempts: " + String(attempts));
+              display.println("Timeout!!");
               display.display();
-              delay(1000);
+              digitalWrite(LED1, HIGH);
+              digitalWrite(LED2, LOW);
+              delay(5000);
+              idleStatus();
+              waitingForPassword = false;
+            } else {
+              showPasswordScreen();
             }
           }
         }
       }
-    }
-
-    if (attempts >= 3) {
-      display.clearDisplay();
-      display.setCursor(0, 0);
-      display.println("Timeout!!");
-      display.display();
-      digitalWrite(LED1, HIGH);
-      digitalWrite(LED2, LOW);
-      delay(5000);
-      idleStatus();
     }
   }
 
@@ -177,5 +176,5 @@ void loop() {
     readyToExit = false;
   }
 
-  delay(100);
+  delay(50);
 }
