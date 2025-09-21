@@ -26,7 +26,7 @@
 |    4    |  Resistor 1k Ohm                                                                                                     |   -                          |
 |    4    |  Resistor 330 Ohm                                                                                                    |   -                          |
 
-## BLock Diagram and Circuit Diagram
+## 📊BLock Diagram and Circuit Diagram
 Circuit Diagram
 ![circuit](https://github.com/AlmondLKECP/2568-CPE-213-L2-SmartDoorSystem-TumAraiDee/blob/ServoMotor/img/circuit_image.png)
 
@@ -36,7 +36,7 @@ Block Diagram
 Actually Circuit
 ![real](https://github.com/AlmondLKECP/2568-CPE-213-L2-SmartDoorSystem-TumAraiDee/blob/ServoMotor/img/real_circuit.jpg)
 
-## VDO Demonstration
+## 🎥VDO Demonstration
 [![CPE-213 Project Smart Door System](http://img.youtube.com/vi/GOKSnvcHoEI/0.jpg)](https://youtu.be/GOKSnvcHoEI "CPE-213 Project Smart Door System")
 
 ## 👨🏻‍💻Team Members
