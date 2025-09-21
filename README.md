@@ -36,6 +36,9 @@ Block Diagram
 Actually Circuit
 ![real](https://github.com/AlmondLKECP/2568-CPE-213-L2-SmartDoorSystem-TumAraiDee/blob/ServoMotor/img/real_circuit.jpg)
 
+## VDO Demonstration
+[![CPE-213 Project Smart Door System](http://img.youtube.com/vi/GOKSnvcHoEI/0.jpg)](https://youtu.be/GOKSnvcHoEI "CPE-213 Project Smart Door System")
+
 ## 👨🏻‍💻Team Members
 | Name       |      Student ID   |     GitHub ID     |
 |------------|------------------|:-----------------:|
