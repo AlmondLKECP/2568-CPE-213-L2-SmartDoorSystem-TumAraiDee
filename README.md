@@ -23,7 +23,7 @@
 |    1    |  CP-2102 <br> &nbsp;&nbsp;&nbsp; TxD <br> &nbsp;&nbsp;&nbsp; RxD                                                     |   <br> 16 <br> 17            |
 |    2    |   Ultrasonic HC-SR04  <br> &nbsp;&nbsp;&nbsp; Sensor 1: Trig1, Echo1 <br> &nbsp;&nbsp;&nbsp; Sensor 2: Trig2, Echo2  |   <br> 32, 33 <br> 25, 26    |
 |    2    |   LED (2 colors)                                                                                                     |   18,19                      |
-|    4    |  Resistor 1k Ohm                                                                                                     |   -                          |
+|    2    |  Resistor 1k Ohm                                                                                                     |   -                          |
 |    4    |  Resistor 330 Ohm                                                                                                    |   -                          |
 
 ## 📊BLock Diagram and Circuit Diagram
