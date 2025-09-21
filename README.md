@@ -1,11 +1,17 @@
 # 🚪[Smart Door System](https://github.com/AlmondLKECP/2568-CPE-213-L2-SmartDoorSystem-TumAraiDee) 🚪
-โปรเจคระบบควบคุมประตูอัฉริยะ
+โครงการ Smart Door System เป็นระบบควบคุมประตูอัจฉริยะที่พัฒนาด้วยบอร์ด ESP32 โดยมีการทำงานร่วมกับเซนเซอร์อัลตร้าโซนิค (Ultrasonic Sensor) สำหรับตรวจจับการเข้า–ออก, มอเตอร์เซอร์โว (Servo Motor) สำหรับควบคุมการเปิด–ปิดประตู, ปุ่มกด (Push Button)สำหรับการออกจากด้านใน และจอแสดงผล OLED พร้อมไฟ LED สำหรับแสดงสถานะการทำงานของระบบ<br> <br>
+การเข้าใช้งานจากด้านนอกต้องเดินผ่านเซนเซอร์อัลตร้าโซนิคก่อนจึงจะให้ใส่รหัสผ่าน ในการยืนยันด้วยรหัสผ่าน 6 หลัก หากกรอกรหัสถูกต้อง ประตูจะเปิดอัตโนมัติและปิดกลับหลังจากเวลาที่กำหนด แต่ถ้ารหัสผิดเกิน 3 ครั้ง ระบบจะเข้าสู่โหมด Timeout เพื่อป้องกันการบุกรุก ขณะที่การออกจากด้านใน ผู้ใช้สามารถกดปุ่มเพื่อเปิดประตูออกได้ ระบบนี้จึงมีทั้งความสะดวกสบายและความปลอดภัย สามารถนำไปประยุกต์ใช้ได้กับบ้านพักอาศัย หอพัก หรือสำนักงาน
 
 ## 💻Software Requirement
-* Visual Studio Code
 * Teraterm
 * CP2102 USB to UART Bridge VCP Driver
-* C++ Language
+* Visual Studio Code
+* Extension on Visual Studio Code
+  * C/C++
+  * PlatformIO IDE
+    * Adafruit SSD1306 by Adafruit
+    * Adafruit GFX Library by Adafruit
+    * ESP32Servo by Kevin Harrington
 
 ## ✅Hardware Requirement & GPIO Port
 |     Pieces     | Name       |      GPIO Port   |    
@@ -19,6 +25,16 @@
 |    2    |   LED (2 colors)                                                                                                     |   18,19                      |
 |    4    |  Resistor 1k Ohm                                                                                                     |   -                          |
 |    4    |  Resistor 330 Ohm                                                                                                    |   -                          |
+
+## BLock Diagram and Circuit Diagram
+Circuit Diagram
+![circuit](https://github.com/AlmondLKECP/2568-CPE-213-L2-SmartDoorSystem-TumAraiDee/blob/ServoMotor/img/circuit_image.png)
+
+Block Diagram
+![block](https://github.com/AlmondLKECP/2568-CPE-213-L2-SmartDoorSystem-TumAraiDee/blob/ServoMotor/img/block_diagram.jpg)
+
+Actually Circuit
+![real](https://github.com/AlmondLKECP/2568-CPE-213-L2-SmartDoorSystem-TumAraiDee/blob/ServoMotor/img/real_circuit.jpg)
 
 ## 👨🏻‍💻Team Members
 | Name       |      Student ID   |     GitHub ID     |
